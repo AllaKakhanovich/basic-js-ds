@@ -22,39 +22,92 @@ const { NotImplementedError } = require('../extensions/index.js');
  *   }
  * }
  */
-function removeKFromList( l, k ) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
-     if (!this.head) {
+ class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+  }
+}
+class LinkedList {  
+  constructor() {
+    this.head = null;
+    this.length = 0;
+  }
+
+  add(value) {
+    if (this.length === 0) {
+      this.head = new Node(value);
+    } else {
+      let current = this.head; 
+
+      while(current.next) { 
+        current = current.next;
+      }
+      current.next = new Node(value);
+    }
+    this.length++;
+  }
+
+  remove(element) {
+    this.removeAt( this.indexOf(element) );
+  }
+  
+  removeAt(position) {
+    if (position < 0 || position >= this.length) {
       return null;
     }
-  
-    let deletedNode = null;
-  
-    while (this.head && this.head.value === k) {
-      deletedNode = this.head;
-       this.head = this.head.next;
-    }
-  
-    let currentNode = this.head;
+    let current = this.head;
 
-    if (currentNode !== null) {
-      while (currentNode.next) {
-        if (currentNode.next.value === k) {
-          deletedNode = currentNode.next;
-          currentNode.next = currentNode.next.next;
-        } else {
-          currentNode = currentNode.next;
-        }
+    if (position === 0) {
+      this.head = current.next;
+    } else {
+      let prev = null;
+      let index = 0;
+
+      while (index < position) {
+        prev = current;
+        current = current.next;
+        index++;
       }
+      prev.next = current.next;
+    }
+    this.length--;
+    return current.value;
+  }
+
+   indexOf(element) {
+    let current = this.head;
+    let index = 0;
+
+    while (current) {
+      if (current.value === element) {
+        return index;
+      }
+      current = current.next;
+      index++;
     }
 
-    if (this.tail && this.tail.value === k) {
-      this.tail = currentNode;
-    }
-  
-    return deletedNode;
+    return -1;
   }
+}
+
+function removeKFromList( l, k ) {
+
+  const linkedList = new LinkedList();
+  let current = l;
+  // for (let i = 0; i < l.length; i++) {
+  //   linkedList.add(l[i]);    
+  // }
+  while (current.next !== null) {
+    linkedList.add(current.value);
+    current = current.next;
+    // linkedList.add(); 
+  }
+  linkedList.add(current.value);
+
+  linkedList.remove(k);
+  return linkedList.head;
+}
 
 module.exports = {
   removeKFromList
